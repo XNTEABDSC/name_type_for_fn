@@ -1,0 +1,9 @@
+[package]
+name = "name_type_for_fn"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+single_fn_static ={ path = "./single_fn_static"}
+name_type_for_fn_proc_macro = {path = "./name_type_for_fn_proc_macro"}

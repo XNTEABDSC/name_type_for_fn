@@ -1,0 +1,13 @@
+[package]
+name = "named_type_for_fn_proc_macro"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+syn = {version = "2", features = ["full"]}
+quote = "1"
+proc-macro2 = "1"
+single_fn_static = {path = "../single_fn_static"}
+
+[lib]
+proc-macro = true
