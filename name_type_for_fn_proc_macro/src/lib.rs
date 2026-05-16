@@ -1,9 +1,8 @@
 
 
 use proc_macro::TokenStream;
-use proc_macro2::Span;
 use quote::quote;
-use syn::{Attribute, Field, FieldsNamed, FnArg, GenericArgument, Ident, ItemFn, ItemStruct, ReturnType, Token, TypeGenerics, parse_macro_input, parse_quote, punctuated::Punctuated, token::Struct};
+use syn::{FnArg, Ident, ItemFn, ReturnType, parse_macro_input, parse_quote};
 
 /// 属性宏，用法：`#[name_type(StructName)]`
 /// 作用于单参数函数，生成一个同名的结构体并为它实现 `SingleFunc`
@@ -45,7 +44,7 @@ pub fn name_type(attr: TokenStream, item: TokenStream) -> TokenStream {
     };
 
     // 获取函数的泛型参数和 where 子句
-    let mut generics = input_fn.sig.generics.clone();
+    let generics = input_fn.sig.generics.clone();
     let where_clause = input_fn.sig.generics.where_clause.clone();
 
     // 构造结构体的泛型参数（与函数完全一致）
@@ -100,14 +99,15 @@ pub fn name_type(attr: TokenStream, item: TokenStream) -> TokenStream {
     let (impl_generics_without_defaults, ty_generics, where_clause_for_impl) =
         impl_generics.split_for_impl();
 
+	let turbo_fish=ty_generics.as_turbofish();
     // 注意：我们需要使用 'static 版本的泛型参数（与函数定义同一组）
     let impl_block = quote! {
-        impl #impl_generics_without_defaults single_fn_static::SingleFnStatic for #struct_name #ty_generics #where_clause_for_impl {
+        impl #impl_generics_without_defaults name_type_for_fn::SingleFnStatic for #struct_name #ty_generics #where_clause_for_impl {
             type Input = #input_ty;
             type Output = #output_ty;
 
-            fn call(input: Self::Input) -> Self::Output {
-                #fn_name(input)
+            fn call_static(input: Self::Input) -> Self::Output {
+                #fn_name #turbo_fish (input)
             }
         }
     };

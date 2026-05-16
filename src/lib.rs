@@ -1,5 +1,7 @@
-pub mod test;
 
 pub use single_fn_static::SingleFnStatic;
 
-pub use named_type_for_fn_proc_macro::name_type;
+pub use name_type_for_fn_proc_macro::name_type;
+
+// #[cfg(test)]
+// pub mod test;
